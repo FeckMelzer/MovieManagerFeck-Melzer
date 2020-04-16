@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MovieManager.Core.Entities
 {
@@ -8,7 +9,8 @@ namespace MovieManager.Core.Entities
     {
         [Required]
         public String CategoryName { get; set; }
-
+        
+        [InverseProperty("Category")]
         public ICollection<Movie> Movies { get; set; }
     }
 }

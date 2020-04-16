@@ -12,6 +12,7 @@ namespace MovieManager.Core.Entities
         public Category Category { get; set; }
 
         [Required]
+      
         public int CategoryId { get; set; }
 
         [Required]
