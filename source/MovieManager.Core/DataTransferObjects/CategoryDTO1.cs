@@ -5,11 +5,11 @@ using System.Text;
 
 namespace MovieManager.Core.DataTransferObjects
 {
-    internal class CategoryDTO1
+    public class CategoryDTO1
     {
-        public Category category { get; set; }
+        public Category Category { get; set; }
         public int MoviesCount { get; set; }
-        public string HoursAndMinutesComplete { get; set; }
+        public int CompleteMinutes { get; set; }
 
     }
 }

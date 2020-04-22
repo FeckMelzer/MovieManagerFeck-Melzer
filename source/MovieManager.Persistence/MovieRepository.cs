@@ -1,5 +1,6 @@
 ﻿using MovieManager.Core.Contracts;
 using MovieManager.Core.Entities;
+using MovieManager.Core.DataTransferObjects;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,5 +90,8 @@ namespace MovieManager.Persistence
                 
 
         }
+
+        
+
     }
 }

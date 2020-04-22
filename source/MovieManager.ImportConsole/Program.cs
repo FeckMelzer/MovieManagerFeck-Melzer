@@ -1,4 +1,5 @@
-﻿using MovieManager.Core;
+﻿using ConsoleTables;
+using MovieManager.Core;
 using MovieManager.Core.Contracts;
 using MovieManager.Core.Entities;
 using MovieManager.Persistence;
@@ -79,11 +80,9 @@ namespace MovieManager.ImportConsole
                 // Die Dauer des längsten Films soll in Stunden und Minuten angezeigt werden!
                 //TODO
                 Movie longestFilm = uow.MovieRepository.getLongestFilm();
-                int durationMinutes = (longestFilm.Duration % 60);
-                string durationHours = ((longestFilm.Duration - durationMinutes) / 60).ToString();
-                if (durationHours.Length == 1) durationHours = $"0{durationHours}";
-                
-                Console.WriteLine($"Längster Film: {longestFilm.Title}, Länge: {durationHours} h {durationMinutes.ToString()} min");
+
+
+                Console.WriteLine($"Längster Film: {longestFilm.Title}, {GetDurationAsString(longestFilm.Duration, false)}");
 
 
                 // Top Kategorie:
@@ -104,20 +103,51 @@ namespace MovieManager.ImportConsole
                 //   - Sortiert nach dem Namen der Kategorie (aufsteigend).
                 //   - Die Gesamtdauer soll in Stunden und Minuten angezeigt werden!
                 //TODO
+                Console.WriteLine();
+                Console.WriteLine("Kategorie Auswertung");
 
+                var CategoryStatistics1 = uow.CategoryRepository.CategoryStatistics1();
+                var Table1 = new ConsoleTable("Kategorie", "Anzahl", "Gesamtdauer");
 
+                foreach (var item in CategoryStatistics1)
+                {
+                    Table1.AddRow(item.Category.CategoryName, item.MoviesCount, GetDurationAsString(item.CompleteMinutes, false));
+                }
+
+                Table1.Write();
+                Console.WriteLine();
                 // Kategorie Auswertung (Teil 2):
                 //   - Alle Kategorien und die durchschnittliche Dauer der Filme der Kategorie
                 //   - Absteigend sortiert nach der durchschnittlichen Dauer der Filme.
                 //     Bei gleicher Dauer dann nach dem Namen der Kategorie aufsteigend sortieren.
                 //   - Die Gesamtdauer soll in Stunden, Minuten und Sekunden angezeigt werden!
                 //TODO
+                var CategoryStatistics2 = uow.CategoryRepository.CategoryStatistics2();
+                var Table2 = new ConsoleTable("Kategorie", "durchschn. Gesamtdauer");
+
+                foreach(var item in CategoryStatistics2)
+                {
+                    Table2.AddRow(item.category.CategoryName, GetDurationAsString(item.averageMovieDuration, true));
+                }
+                Table2.Write();
+
             }
         }
 
-        private static string GetDurationAsString(double minutes, bool withSeconds = true)
+        private static string GetDurationAsString(double minutes, bool withSeconds)
         {
-            throw new NotImplementedException();
+            double durationMinutes = (minutes % 60);
+            string durationHours = ((minutes - durationMinutes) / 60).ToString();
+
+            if (durationHours.Length == 1) durationHours = $"0{durationHours}";
+            
+            
+            if(!withSeconds)return $"{durationHours} h {durationMinutes} min";
+
+            return $"{durationHours} h {Math.Truncate(durationMinutes)} min {Math.Truncate((durationMinutes - Math.Truncate(durationMinutes)) * 60)} sec";
+
+
         }
+       
     }
 }

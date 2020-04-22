@@ -5,9 +5,9 @@ using System.Text;
 
 namespace MovieManager.Core.DataTransferObjects
 {
-    class CategoryDTO2
+    public class CategoryDTO2
     {
         public Category category { get; set; }
-        public string averageMovieDuration { get; set; }
+        public double averageMovieDuration { get; set; }
     }
 }
