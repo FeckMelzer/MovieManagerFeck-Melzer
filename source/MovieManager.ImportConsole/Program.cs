@@ -96,7 +96,7 @@ namespace MovieManager.ImportConsole
                 // Jahr der Kategorie "Action":
                 //  - In welchem Jahr wurden die meisten Action-Filme veröffentlicht?
                 //TODO
-                int yearOfMostActionFilms = uow.MovieRepository.getYearWithMostActionFilms();
+                var yearOfMostActionFilms = uow.MovieRepository.getYearWithMostActionFilms();
                 Console.WriteLine($"Jahr der Action-Filme: {yearOfMostActionFilms.ToString()}");
 
                 // Kategorie Auswertung (Teil 1):

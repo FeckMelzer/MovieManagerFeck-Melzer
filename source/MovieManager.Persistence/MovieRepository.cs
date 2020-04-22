@@ -36,7 +36,7 @@ namespace MovieManager.Persistence
                     Movie = m
                 })
                 .AsEnumerable()
-                .OrderBy(m => m.Movie.Duration)
+                .OrderByDescending(m => m.Movie.Duration)
                 .ThenBy(m => m.Movie.Title)
                 .Select(m => m.Movie)
                 .First();
@@ -44,28 +44,50 @@ namespace MovieManager.Persistence
 
         public int getYearWithMostActionFilms()
         {
-            List<Movie> movies = _dbContext.Movies
-                .OrderBy(m => m.Year)
-                .ToList();
-            int yearWithMostActionFilms = movies.ElementAt(0).Year;
-            int count = 0;
             
-            for(int i = 0; i < _dbContext.Movies.Count(); i++)
-            {
-                int yearcount = 0;
-                for(int k = 0; movies.ElementAt(k).Year == movies.ElementAt(k+1).Year; k++)
+            List<int> years = _dbContext.Movies
+                .Select(m => new
                 {
-                    yearcount++;
-                }
-                i += yearcount;
-                if (yearcount > count)
-                {
-                    yearWithMostActionFilms = movies.ElementAt(i).Year;
-                    count = yearcount;
-                }
-            }
+                    Movie = m
+                })
+                .AsEnumerable()
+                .OrderBy(m => m.Movie.Year)
+                .Select(m => m.Movie.Year)
+                .ToList();
 
-            return yearWithMostActionFilms;
+            List<Movie> actionFilms = _dbContext.Movies
+                .Select(m => new
+                {
+                    Movie = m
+                })
+                .Where(m => m.Movie.Category.CategoryName.Equals("Action"))
+                .Select(m => m.Movie)
+                .ToList();
+
+            int count = 0;
+            int countTemp = 0;
+            int retYear = 0;
+            foreach (var year in years)
+            {
+                countTemp = 0;
+
+                foreach (var actionFilm in actionFilms)
+                {
+                    if(actionFilm.Year.Equals(year))
+                    {
+                        countTemp++;
+                    }
+                }
+                if(countTemp > count)
+                {
+                    retYear = year;
+                    count = countTemp;
+                }
+
+            }
+            return retYear;
+                
+
         }
     }
 }
